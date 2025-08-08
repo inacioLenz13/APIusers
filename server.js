@@ -22,6 +22,23 @@ app.post('/users', async (request, response) => {
 
 })
 
+app.put('/users/:id', async (req, res) => {
+
+    await prisma.user.update({
+        where: {
+            id: req.params.id
+        },
+        data: {
+            email: req.body.email,
+            name: req.body.name,
+            age: req.body.age,
+        }
+    }
+    )
+
+}
+)
+
 app.get('/users', async(request, response) => {
     const users = await prisma.user.findMany()
     response.status(200).json(users)
@@ -41,6 +58,16 @@ app.get('/users/:id', async(request, response) =>{
     response.status(200).json(foundUser)
 }
 )
+
+app.delete('/users/:id', async (req, res) =>{
+    await prisma.user.delete({
+        where: {
+            id: req.params.id
+        }
+    })
+
+    res.status(200).json({message: 'User deleted' })
+})
 
 app.listen(3000, ()=>{
     console.log(chalk.green('server running at http://localhost:3000'))
